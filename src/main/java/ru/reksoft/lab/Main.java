@@ -10,6 +10,7 @@ import ru.reksoft.lab.model.Contact;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class Main {
         boolean exitFlag = false;
         System.out.println("Contact Book 1.0");
 
-        if (!askForNewFile()) return;
+//        if (!askForNewFile()) return;
 
         while (!exitFlag) {
             boolean trueCommand = false;
@@ -53,19 +54,18 @@ public class Main {
                         case "exit":
                             trueCommand = true;
                             exitFlag = true;
-                            System.out.println("Good buy!");
+                            System.out.println("Good bye!");
                             break;
                         default:
                             System.out.printf("Sorry. Use commands correctly.");
                             break;
                     }
-                } else if (commandAsArray.length == 3 && "delete".equals(commandAsArray[0])) {
+                } else if (commandAsArray.length == 2 && "delete".equals(commandAsArray[0])) {
                     deleteCommand(commandAsArray);
                 } else {
                     System.out.println("Sorry. Use command correctly.");
                 }
             }
-
         }
     }
 
@@ -73,57 +73,24 @@ public class Main {
         System.out.printf("Command list:\nshow - for show all book\nadd - to add a new contact\ndelete name surname - to delete contact\nexit - to close the application\n>>> ");
     }
 
-    private static boolean checkAnswerToDelete(String answer, int maxVal) {
-        int val = 0;
+    private static int checkAnswerToDelete(String answer) {
+        int val;
         try {
             val = Integer.parseInt(answer);
         } catch (NumberFormatException e) {
-            return false;
+            return -1;
         }
-        if (val >= 1 && val <= maxVal)
-            return true;
-        return false;
+        return val;
     }
 
     private static void showContactInfo(Contact contact) {
+        System.out.printf("id: " + contact.getId() + ";\t");
         System.out.printf("Name: " + contact.getName() + ";\t");
         System.out.printf("Surname: " + contact.getSurname() + ";\t");
         System.out.printf("Telephone number: " + contact.getTelNumber() + ";\t");
         System.out.printf("Mail: " + contact.getMail() + ";\t");
         System.out.printf("Organization: " + contact.getOrganization() + ";\t");
         System.out.printf("Position: " + contact.getPosition() + ";\t\n");
-    }
-
-    private static boolean askForNewFile(){
-        String file;
-        boolean newFileFlag = false;
-        System.out.printf("Do you want to open your own file? Y/N: ");
-        try {
-            while (!newFileFlag) {
-                String answer = br.readLine();
-                switch (answer.toLowerCase()) {
-                    case "yes":
-                    case "y":
-                        newFileFlag = true;
-                        System.out.print("Enter a filename: ");
-                        file = br.readLine();
-                        cm.readContacts(file);
-                        break;
-                    case "no":
-                    case "n":
-                        newFileFlag = true;
-                        break;
-                    default:
-                        System.out.printf("Please enter Y/N: ");
-                        break;
-                }
-            }
-            System.out.println("Data loaded successfully.");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
-        return true;
     }
 
     private static void addCommand(){
@@ -213,8 +180,13 @@ public class Main {
     }
 
     private static void showCommand(){
-        List<Contact> contacts = cm.getContacts();
-        if (!contacts.isEmpty()) {
+        List<Contact> contacts = null;
+        try {
+            contacts = cm.getContacts();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        if (!(contacts != null && contacts.isEmpty())) {
             int index = 1;
             for (Contact contact : contacts) {
                 System.out.printf(index + ". ");
@@ -228,35 +200,10 @@ public class Main {
 
     private static void deleteCommand(String[] commandAsArray) throws IOException{
         try {
-            List<Contact> listToDelete = cm.deleteContact(commandAsArray[1], commandAsArray[2]);
-            if (!listToDelete.isEmpty()) {
-                if (listToDelete.size() == 1) {
-                    System.out.println("Contact deleted");
-                    if (cm.getFreeSpaceOfBook() != 0)
-                        System.out.println("Now " + cm.getCurrentSizeOfBook() + " contacts in the book. You can add " + cm.getFreeSpaceOfBook() + " more.");
-                    else
-                        System.out.println("Book is full at " + cm.getCurrentSizeOfBook() + " contacts. Delete someone.");
-                } else {
-                    System.out.println("Found " + listToDelete.size() + " matches. Please, Choose one.");
-                    int index = 1;
-                    for (Contact contact : listToDelete) {
-                        System.out.printf(index + ". ");
-                        showContactInfo(contact);
-                        index++;
-                    }
-                    String answer;
-                    do {
-                        answer = br.readLine();
-                    } while (!checkAnswerToDelete(answer, listToDelete.size()));
-
-                    int indexForDelete = Integer.parseInt(answer);
-                    cm.deleteContact(listToDelete.get(indexForDelete - 1));
-                    System.out.println("Contact deleted");
-                    System.out.println("Now " + cm.getCurrentSizeOfBook() + " contacts in the book. You can add " + cm.getFreeSpaceOfBook() + " more.");
-                }
-            } else {
-                System.out.println("No matches found. Please try again.");
-            }
+            int idDelete = checkAnswerToDelete(commandAsArray[1]);
+            cm.deleteContact(idDelete);
+            System.out.println("Contact deleted");
+            System.out.println("Now " + cm.getCurrentSizeOfBook() + " contacts in the book. You can add " + cm.getFreeSpaceOfBook() + " more.");
         } catch (Exception e){
             System.out.println(e.getMessage());
         }

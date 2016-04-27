@@ -1,8 +1,9 @@
 package ru.reksoft.lab.controller;
 
 import ru.reksoft.lab.model.Contact;
+import ru.reksoft.lab.model.Provider;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -11,70 +12,40 @@ import java.util.List;
 public class ContactManager {
 
     private int maxContacts;
-    private List<Contact> contacts;
-    private ParserXML parser;
-    private String filePath;
+    private Provider provider;
 
-    public ContactManager(ParserXML parser, String filePath){
-        this.parser = parser;
-        this.filePath = filePath;
-        try {
-            readContacts();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public ContactManager(Provider provider){
+        this.provider = provider;
     }
 
     public void setMaxContacts(int maxContacts) {
         this.maxContacts = maxContacts;
     }
 
-    private void readContacts() throws Exception{
-        contacts = parser.readXml(filePath);
-    }
-
-    public void readContacts(String newFile) throws Exception{
-        this.filePath = newFile;
-        readContacts();
-    }
-
-    private void saveContacts() throws Exception{
-        parser.saveInXml(contacts, filePath);
-    }
-
-    public List<Contact> getContacts() {
-        return contacts;
+    public List<Contact> getContacts() throws SQLException {
+        return provider.getContacts();
     }
 
     public void addContact(String name, String surname, String telNumber, String mail, String organization, String position) throws Exception{
 
-        contacts.add(new Contact(name, surname, telNumber, mail, organization, position));
-        saveContacts();
+        provider.addContact(name, surname, telNumber, mail, organization, position);
+
     }
 
-    public List<Contact> deleteContact(String name, String surname) throws Exception{
-        List<Contact> contactsToDelete = new ArrayList<>();
-        for (Contact contact : contacts) {
-            if (name.toLowerCase().equals(contact.getName().toLowerCase()) && surname.toLowerCase().equals(contact.getSurname().toLowerCase())) {
-                contactsToDelete.add(contact);
-            }
-        }
-        if (contactsToDelete.size() == 1) {
-            deleteContact(contactsToDelete.get(0));
-        }
-        return contactsToDelete;
-    }
-
-    public void deleteContact(Contact contact) throws Exception{
-        contacts.remove(contact);
-        saveContacts();
+    public void deleteContact(int id) throws Exception{
+        provider.deleteContact(id);
     }
 
     public int getCurrentSizeOfBook() {
-        return contacts.size();
+        try {
+            return provider.getSizeOfBook();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public int getFreeSpaceOfBook() {
-        return maxContacts - contacts.size();
+        return maxContacts - getCurrentSizeOfBook();
     }
 }
