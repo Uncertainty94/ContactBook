@@ -1,12 +1,16 @@
 package ru.reksoft.lab.model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by mishanin on 27.04.2016.
  */
-public interface Provider {
+public abstract class Provider {
     int ID              = 1;
     int NAME            = 2;
     int SURNAME         = 3;
@@ -15,21 +19,42 @@ public interface Provider {
     int ORGANIZATION    = 6;
     int POSITION        = 7;
 
-    String JDBC_DRIVER = "org.postgresql.Driver";
-    String DB_URL = "jdbc:postgresql://localhost:5432/contact_book";
-    String TABLE_NAME = "contacts_table";
+    String JDBC_DRIVER;
+    String DB_URL;
+    String TABLE_NAME = "contacts_table"
+            ;
 
-    String USER = "postgres";
-    String PASS = "admin";
+    String USER;
+    String PASS;
 
-    void addContact(String name, String surname, String telNumber, String mail, String organization, String position)
+    Provider(){
+        try {
+            loadProperties();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    abstract public void addContact(String name, String surname, String telNumber, String mail, String organization, String position)
             throws SQLException;
 
-    void deleteContact(int id) throws SQLException;
+    abstract public void deleteContact(int id) throws SQLException;
 
-    void updateContact(Contact contact) throws SQLException;
+    abstract public void updateContact(Contact contact) throws SQLException;
 
-    List<Contact> getContacts() throws SQLException;
+    abstract public List<Contact> getContacts() throws SQLException;
 
-    int getSizeOfBook() throws SQLException;
+    abstract public int getSizeOfBook() throws SQLException;
+
+    private void loadProperties()throws IOException {
+        Properties props = new Properties();
+        props.load(new FileInputStream(new File("server.properties")));
+        JDBC_DRIVER = props.getProperty("JDBC_DRIVER");
+        DB_URL = props.getProperty("DB_URL");
+//        TABLE_NAME = props.getProperty("TABLE_NAME");
+        USER = props.getProperty("USER");
+        PASS = props.getProperty("PASS");
+
+    }
+
 }

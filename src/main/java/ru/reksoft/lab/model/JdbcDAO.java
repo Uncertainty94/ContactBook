@@ -7,12 +7,17 @@ import java.util.List;
 /**
  * Created by mishanin on 27.04.2016.
  */
-public class JdbcDAO implements Provider{
+public class JdbcDAO extends Provider{
 
     private Connection conn = null;
     private Statement stmt = null;
 
     public JdbcDAO() {
+        super();
+        checkTable();
+    }
+
+    private void checkTable() {
         try {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             stmt = conn.createStatement();

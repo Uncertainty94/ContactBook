@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,12 +13,13 @@ import java.util.List;
 /**
  * Created by mishanin on 27.04.2016.
  */
-public class HibernateDAO implements Provider {
+public class HibernateDAO extends Provider {
 
     SessionFactory sessionFactory;
     Session session;
 
     public HibernateDAO(){
+        super();
         sessionFactory = new Configuration().configure()
                 .buildSessionFactory();
         session = sessionFactory.openSession();
