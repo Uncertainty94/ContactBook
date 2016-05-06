@@ -11,9 +11,4 @@ public abstract class InputSpellException extends Exception{
     public InputSpellException(String message) {
         super(message);
     }
-
-    @Override
-    public String getMessage() {
-        return super.getMessage();
-    }
 }

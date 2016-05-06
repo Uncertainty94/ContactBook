@@ -72,4 +72,15 @@ public class Contact {
     public int getId() {
         return id;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Contact anotherContact = (Contact) obj;
+        return name.equals(anotherContact.getName()) &&
+                surname.equals(anotherContact.getSurname()) &&
+                telNumber.equals(anotherContact.getTelNumber()) &&
+                mail.equals(anotherContact.getMail()) &&
+                organization.equals(anotherContact.getOrganization()) &&
+                position.equals(anotherContact.getPosition());
+    }
 }

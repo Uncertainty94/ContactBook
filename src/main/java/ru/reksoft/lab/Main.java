@@ -29,8 +29,8 @@ public class Main {
                 new ClassPathXmlApplicationContext("config.xml");
 
         cm = (ContactManager) context.getBean("contactManager");
-        String provAns;
-        System.out.println("Choose provider (hiber or jdbc).\n>>>");
+        String provAns = "";
+        System.out.printf("Choose provider (hiber or jdbc).\n>>> ");
         boolean chooseProviderFlag = true;
         while (chooseProviderFlag) {
             provAns = br.readLine();
@@ -50,7 +50,7 @@ public class Main {
         }
         String currentCommand;
         boolean exitFlag = false;
-        System.out.println("Contact Book 1.0");
+        System.out.println("Contact Book 1.0. Provider: " + provAns.toLowerCase());
 
         while (!exitFlag) {
             boolean trueCommand = false;

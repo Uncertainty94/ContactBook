@@ -6,6 +6,7 @@ import ru.reksoft.lab.exceptions.*;
  * Created by mishanin on 20.04.2016.
  */
 public class InputChecker {
+
     public static boolean checkName(String name) throws NameInputException {
         boolean result = (name != null) && (!"".equals(name)) && (name.split(" ").length < 2);
         if (!result){

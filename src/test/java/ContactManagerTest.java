@@ -8,6 +8,9 @@ import org.junit.Assert;
 import ru.reksoft.lab.service.ContactManager;
 import ru.reksoft.lab.domain.Contact;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by mishanin on 20.04.2016.
  */
@@ -32,33 +35,36 @@ public class ContactManagerTest extends Assert {
 
     @Test
     public void testAddContact() throws Exception{
-        //TODO: через мохито!
-//        List<Contact> prevContacts = new ArrayList<>();
-//        prevContacts.addAll(cm.getContacts());
-//
-//        cm.addContact(name, surname, tel, mail, org, pos);
-//        List<Contact> newContacts = cm.getContacts();
-//        newContacts.removeAll(prevContacts);
-//        for (Contact cont: newContacts){
-//            assertEqualsContact(contact, cont);
-//        }
-//        assertEquals(newContacts.size(), 1);
-//        cm.deleteContact(contact.getId());
+        List<Contact> prevContacts = new ArrayList<>();
+        prevContacts.addAll(cm.getContacts());
+
+        cm.addContact(name, surname, tel, mail, org, pos);
+        List<Contact> newContacts = cm.getContacts();
+        newContacts.removeAll(prevContacts);
+        for (Contact cont: newContacts){
+            assertEqualsContact(contact, cont);
+            cm.deleteContact(cont.getId());
+        }
+        assertEquals(newContacts.size(), 1);
+
     }
 
     @Test
     public void testDeleteContact() throws Exception{
-        //TODO: через мохито!
-//        List<Contact> prevContacts = new ArrayList<>();
-//        prevContacts.addAll(cm.getContacts());
-//
-//        cm.deleteContact(contact.getId());
-//        List<Contact> newContacts = cm.getContacts();
-//        prevContacts.removeAll(newContacts);
-//        for (Contact cont: prevContacts){
-//            assertEqualsContact(contact, cont);
-//        }
-//        cm.addContact(name, surname, tel, mail, org, pos);
+        List<Contact> prevContacts = new ArrayList<>();
+
+        cm.addContact(name, surname, tel, mail, org, pos);
+        prevContacts.addAll(cm.getContacts());
+
+        int idToDelete = findMaxId(prevContacts);
+        cm.deleteContact(idToDelete);
+
+        List<Contact> newContacts = cm.getContacts();
+        prevContacts.removeAll(newContacts);
+        for (Contact cont: prevContacts){
+            assertEqualsContact(contact, cont);
+        }
+        assertEquals(prevContacts.size(), 1);
     }
 
     private void assertEqualsContact(Contact one, Contact two){
@@ -68,6 +74,13 @@ public class ContactManagerTest extends Assert {
         assertEquals(one.getMail(), two.getMail());
         assertEquals(one.getOrganization(), two.getOrganization());
         assertEquals(one.getPosition(), two.getPosition());
+    }
+
+    private int findMaxId(List<Contact> contacts){
+        int id = 0;
+        for (Contact contact: contacts)
+            if (contact.getId() > id) id = contact.getId();
+        return id;
     }
 
     @After
