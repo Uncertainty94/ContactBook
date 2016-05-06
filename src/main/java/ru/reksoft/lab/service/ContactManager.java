@@ -1,7 +1,7 @@
-package ru.reksoft.lab.controller;
+package ru.reksoft.lab.service;
 
-import ru.reksoft.lab.model.Contact;
-import ru.reksoft.lab.model.Provider;
+import ru.reksoft.lab.domain.Contact;
+import ru.reksoft.lab.dao.ContactDao;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
 public class ContactManager {
 
     private int maxContacts;
-    private Provider provider;
+    private ContactDao provider;
 
-    public ContactManager(Provider provider){
+    public void setProvider(ContactDao provider) {
         this.provider = provider;
     }
 

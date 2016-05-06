@@ -2,10 +2,11 @@ package ru.reksoft.lab;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.reksoft.lab.controller.ContactManager;
-import ru.reksoft.lab.controller.InputChecker;
+import ru.reksoft.lab.dao.ContactDao;
+import ru.reksoft.lab.service.ContactManager;
+import ru.reksoft.lab.util.InputChecker;
 import ru.reksoft.lab.exceptions.InputSpellException;
-import ru.reksoft.lab.model.Contact;
+import ru.reksoft.lab.domain.Contact;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,12 +29,28 @@ public class Main {
                 new ClassPathXmlApplicationContext("config.xml");
 
         cm = (ContactManager) context.getBean("contactManager");
-
+        String provAns;
+        System.out.println("Choose provider (hiber or jdbc).\n>>>");
+        boolean chooseProviderFlag = true;
+        while (chooseProviderFlag) {
+            provAns = br.readLine();
+            switch (provAns.toLowerCase()) {
+                case "jdbc":
+                    cm.setProvider((ContactDao) context.getBean("jdbcDao"));
+                    chooseProviderFlag = false;
+                    break;
+                case "hiber":
+                case "hibernate":
+                    chooseProviderFlag = false;
+                    break;
+                default:
+                    System.out.println("No such provider. Please choose hiber or jdbc.\n>>>");
+                    break;
+            }
+        }
         String currentCommand;
         boolean exitFlag = false;
         System.out.println("Contact Book 1.0");
-
-//        if (!askForNewFile()) return;
 
         while (!exitFlag) {
             boolean trueCommand = false;

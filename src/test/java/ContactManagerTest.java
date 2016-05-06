@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.junit.Assert;
-import ru.reksoft.lab.controller.ContactManager;
-import ru.reksoft.lab.model.Contact;
+import ru.reksoft.lab.service.ContactManager;
+import ru.reksoft.lab.domain.Contact;
 
 /**
  * Created by mishanin on 20.04.2016.

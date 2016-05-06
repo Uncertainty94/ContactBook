@@ -5,13 +5,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="contactManager" class="ru.reksoft.lab.controller.ContactManager">
-        <constructor-arg ref="hibernateDAO"/>
+    <import resource="classpath:spring-dao.xml"/>
+    <bean id="contactManager" class="ru.reksoft.lab.service.ContactManager">
+        <property name="provider" ref="hibernateDAO"/>
         <property name="maxContacts" value="10"/>
     </bean>
-
-    <bean id="jdbcDAO" class="ru.reksoft.lab.model.JdbcDAO"/>
-
-    <bean id="hibernateDAO" class="ru.reksoft.lab.model.HibernateDAO"/>
 
 </beans>

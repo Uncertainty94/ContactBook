@@ -2,14 +2,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runners.JUnit4;
-import ru.reksoft.lab.controller.InputChecker;
+import ru.reksoft.lab.util.InputChecker;
 import ru.reksoft.lab.exceptions.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by mishanin on 20.04.2016.

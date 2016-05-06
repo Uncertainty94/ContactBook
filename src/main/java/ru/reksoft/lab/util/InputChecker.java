@@ -1,4 +1,4 @@
-package ru.reksoft.lab.controller;
+package ru.reksoft.lab.util;
 
 import ru.reksoft.lab.exceptions.*;
 

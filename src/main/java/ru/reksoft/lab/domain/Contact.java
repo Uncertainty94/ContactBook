@@ -1,4 +1,4 @@
-package ru.reksoft.lab.model;
+package ru.reksoft.lab.domain;
 
 import javax.persistence.*;
 

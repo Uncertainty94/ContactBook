@@ -23,7 +23,7 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <!-- Annotated entity classes -->
-        <mapping class="ru.reksoft.lab.model.Contact"/>
+        <mapping class="ru.reksoft.lab.domain.Contact"/>
 
     </session-factory>
 </hibernate-configuration>
